@@ -1,3 +1,5 @@
+import { Asteroid } from "./asteroid"
+import { EdgeAsteroidFactory } from "./asteroidFactory"
 import { Player } from "./player"
 export const WIDTH = 800
 export const HEIGHT = 600
@@ -12,12 +14,27 @@ export default function initGame() {
     canvas.style.border = '1px solid white'
 
     const player1 = new Player(WIDTH / 2, HEIGHT / 2)
+    const asteroids: Asteroid[] = []
+
+    asteroids.push(new EdgeAsteroidFactory().create())
+    asteroids.push(new EdgeAsteroidFactory().create())
+
+    setInterval(() => {
+        const newAsteroid = new EdgeAsteroidFactory().create()
+        asteroids.push(newAsteroid)
+    }, 1000)
 
     function gameLoop() {
+        if (!ctx) return
         ctx?.clearRect(0, 0, canvas.width, canvas.height)
 
         player1.draw(ctx)
         player1.update()
+
+        asteroids.forEach(asteroid => {
+            asteroid.update(1)
+            asteroid.draw(ctx)
+        })
 
         requestAnimationFrame(gameLoop)
 
@@ -25,6 +42,8 @@ export default function initGame() {
     }
 
     gameLoop()
+
+
 
     document.addEventListener('keydown', (e) => {
         if (e.key === 'ArrowLeft') player1.isRotatingLeft = true
