@@ -17,6 +17,7 @@ export default function initGame() {
     let asteroids: Asteroid[] = []
     const PLAYER_FRICTION = 0.99
     const ASTEROID_FRICTION = 1
+    let gameOver = false
 
     asteroids.push(new EdgeAsteroidFactory().create())
     asteroids.push(new EdgeAsteroidFactory().create())
@@ -29,6 +30,14 @@ export default function initGame() {
     function gameLoop() {
         if (!ctx) return
         ctx?.clearRect(0, 0, canvas.width, canvas.height)
+
+        if (gameOver) {
+            ctx.fillStyle = 'red'
+            ctx.font = 'bold 40px Arial'
+            ctx.textAlign = 'center'
+            ctx.fillText("GAME OVER", WIDTH / 2, HEIGHT / 2)
+            return
+        }
 
         player1.draw(ctx)
         player1.update(PLAYER_FRICTION)
@@ -49,6 +58,10 @@ export default function initGame() {
 
         // Destruir asteroides fuera del mundo
 
+        collisionBulletAsteroid()
+
+        gameOver = checkPlayerAsteroidCollision()
+
         requestAnimationFrame(gameLoop)
 
 
@@ -56,6 +69,27 @@ export default function initGame() {
 
     gameLoop()
 
+    function checkPlayerAsteroidCollision(): boolean {
+
+    }
+
+    function collisionBulletAsteroid(): boolean {
+        asteroids.forEach((asteroid, asteroirIndex) => {
+            player1.bullets.forEach((bullet, bulletIndex) => {
+                const dx = asteroid.x - bullet.x
+                const dy = asteroid.y - bullet.y
+                const distance = Math.sqrt(dx * dx + dy * dy)
+                if (distance <= asteroid.size + bullet.size) {
+                    asteroids.splice(asteroirIndex, 1)
+                    player1.bullets.splice(bulletIndex, 1)
+                    const sound = new Audio("/public/sounds/explosion.mp3")
+                    sound.play()
+                    return true
+                }
+            })
+        })
+        return false
+    }
 
 
     document.addEventListener('keydown', (e) => {
