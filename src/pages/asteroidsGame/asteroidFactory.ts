@@ -15,7 +15,7 @@ export class EdgeAsteroidFactory implements AsteroidFactory {
         switch (pos) {
             case 0:
                 x = Math.random() * WIDTH
-                //y = 0
+                //  y = 0
                 break
             case 1:
                 x = WIDTH
@@ -26,7 +26,7 @@ export class EdgeAsteroidFactory implements AsteroidFactory {
                 y = HEIGHT
                 break
             case 3:
-                //x = 0
+                //  x = 0
                 y = Math.random() * HEIGHT
                 break
         }
@@ -34,3 +34,10 @@ export class EdgeAsteroidFactory implements AsteroidFactory {
     }
 
 }
+
+/* class CenterAsteroidFactory implements AsteroidFactory {
+    create(): Asteroid {
+        throw new Error("Method not implemented.");
+    }
+
+} */

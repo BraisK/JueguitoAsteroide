@@ -1,13 +1,9 @@
 import { Bullet } from "./bullet"
+import { WIDTH } from "./game"
 import { Mobile } from "./mobile"
 
 export class Player extends Mobile {
-    //velocity: { x: number, y: number }
-    //size: number
     color: string = 'white'
-    //angle: number
-    //thrust: number // aceleracion
-    // friction: number
 
     isRotatingLeft: boolean
     isRotatingRight: boolean
@@ -16,20 +12,18 @@ export class Player extends Mobile {
     rotationSpeed: number
 
     bullets: Bullet[] = []
+    score: number = 0
+    sound = new Audio('./sounds/laser.wav')
+
 
     constructor(public x: number, public y: number) {
-        super(x, y, 0, 0.09, 20)
-        //this.velocity = { x: 0, y: 0 }
-        //this.size = 20
-        //this.angle = 0
-        //this.thrust = 0.09
-        // this.friction = 0.99
+        super(x, y, 0, 0.2, 20)
+
         this.isRotatingLeft = false
         this.isRotatingRight = false
         this.isThrusting = false
         this.rotationSpeed = 0.05
     }
-
 
     draw(ctx: CanvasRenderingContext2D) {
         ctx.save()
@@ -46,9 +40,7 @@ export class Player extends Mobile {
     }
 
 
-
     update(friction: number = 0.99) {
-
         if (this.isThrusting) {
             this.velocity.x += Math.cos(this.angle) * this.thrust
             this.velocity.y += Math.sin(this.angle) * this.thrust
@@ -59,13 +51,23 @@ export class Player extends Mobile {
 
         super.update(friction)
         this.sphericWorld()
-
     }
 
     shot() {
         const newBullet = new Bullet(this.x, this.y, this.angle)
-
+        newBullet.velocity.x += this.velocity.x
+        newBullet.velocity.y += this.velocity.y
         this.bullets.push(newBullet)
+        this.sound.play()
     }
+
+    drawScore(ctx: CanvasRenderingContext2D, pos: 'izq' | 'der') {
+        ctx.fillStyle = 'white'
+        ctx.font = "24px arial"
+        if (pos === 'izq') ctx.fillText(`Score Player 1: ${this.score}`, 20, 40)
+        else ctx.fillText(`Score Player 2: ${this.score}`, WIDTH / 2, 40)
+    }
+
+
 
 }

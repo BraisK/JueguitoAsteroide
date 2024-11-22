@@ -1,8 +1,9 @@
 import { Mobile } from "./mobile"
 
 export class Asteroid extends Mobile {
+
+    sound = new Audio('./sounds/explosion.mp3')
     constructor(public x: number, public y: number, public size: number) {
-        // this.velocity = { x: 0, y: 0 }
         super(x, y, 0, 0, size)
 
         this.velocity.x = (Math.random() - 0.5) * 2
@@ -15,5 +16,9 @@ export class Asteroid extends Mobile {
         ctx.closePath()
         ctx.fillStyle = 'white'
         ctx.fill()
+    }
+
+    playSound() {
+        this.sound.play()
     }
 }

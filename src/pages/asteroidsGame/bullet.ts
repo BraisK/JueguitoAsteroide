@@ -15,6 +15,4 @@ export class Bullet extends Mobile {
         ctx.fill()
     }
 
-
-
 }
